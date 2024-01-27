@@ -1,12 +1,14 @@
 import { Outlet, RouterProvider, createBrowserRouter } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+import Footer from "./components/Footer";
 
 const Layout = () => {
   return (
     <>
       <Navbar />
       <Outlet />
+      <Footer />
     </>
   );
 };
