@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-interface Post {
+export interface Post {
   id: number;
   title: string;
   desc: string;
