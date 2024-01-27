@@ -40,14 +40,8 @@ const Home = () => {
 
   const cat = useLocation().search;
   useEffect(() => {
-    console.log("here");
     setPosts(postsData);
   }, [cat]);
-
-  //   const getText = (html: string) => {
-  //     const doc = new DOMParser().parseFromString(html, "text/html");
-  //     return doc.body.textContent;
-  //   };
 
   return (
     <>

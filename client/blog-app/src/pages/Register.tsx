@@ -1,6 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { FormEvent, useState } from "react";
-import { FieldValue, FieldValues, useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -52,6 +51,7 @@ const Register = () => {
           type="password"
           className="form-control"
           placeholder="Password"
+          autoComplete="on"
         />
         {errors.password && (
           <p className="text-danger">{errors.password.message}</p>
