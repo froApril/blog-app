@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,6 +23,7 @@ const Login = () => {
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
   const context = useContext(AuthContext);
+  const navigate = useNavigate();
   const onSubmit = (data: FieldValues) => {
     const input = {
       username: data.username,
@@ -31,6 +32,7 @@ const Login = () => {
     const currentUser = context?.currentUser;
     console.log(currentUser);
     context?.login(input);
+    navigate("/");
   };
 
   return (

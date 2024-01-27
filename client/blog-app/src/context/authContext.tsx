@@ -23,6 +23,7 @@ export const AuthContexProvider = ({ children }: Props) => {
   const login = (input: Input) => {
     console.log("Try login with: " + input);
     setCurrentUser(input.username);
+    return;
   };
 
   const logout = () => {
