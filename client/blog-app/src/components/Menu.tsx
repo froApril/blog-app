@@ -6,6 +6,7 @@ interface Props {
 }
 
 const Menu = ({ cat }: Props) => {
+  console.log(cat);
   const postData = [
     {
       id: 1,

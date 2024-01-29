@@ -43,6 +43,11 @@ const Home = () => {
     setPosts(postsData);
   }, [cat]);
 
+  //   const getText = (html: string) => {
+  //     const doc = new DOMParser().parseFromString(html, "text/html");
+  //     return doc.body.textContent;
+  //   };
+
   return (
     <>
       <div className="home">

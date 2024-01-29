@@ -15,6 +15,8 @@ const schema = z.object({
     .max(12, { message: "Password at most 12 characters" }),
 });
 
+type FormData = z.infer<typeof schema>;
+
 const Login = () => {
   const {
     register,

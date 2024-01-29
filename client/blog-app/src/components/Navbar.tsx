@@ -5,6 +5,9 @@ import { AuthContext } from "../context/authContext";
 const Navbar = () => {
   const context = useContext(AuthContext);
   const currentUser = context?.currentUser;
+  let username = "";
+  if (currentUser) username = JSON.stringify(currentUser);
+  username = username.slice(1, username.length - 1);
   const logout = context?.logout;
 
   return (
@@ -34,20 +37,20 @@ const Navbar = () => {
           <Link className="link" to="/?cat=food">
             <h6>FOOD</h6>
           </Link>
-          <span>{currentUser}</span>
           {currentUser ? (
-            <span onClick={logout}>Logout</span>
+            <>
+              <span>{username}</span>
+              <span onClick={logout}>Logout</span>
+              <span className="write">
+                <Link className="link" to="/write">
+                  Write
+                </Link>
+              </span>
+            </>
           ) : (
             <Link className="link" to="/login">
               Login
             </Link>
-          )}
-          {currentUser && (
-            <span className="write">
-              <Link className="link" to="/write">
-                Write
-              </Link>
-            </span>
           )}
         </div>
       </div>

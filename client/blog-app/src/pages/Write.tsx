@@ -1,6 +1,6 @@
-import { useState, MouseEvent } from "react";
+import { useState } from "react";
 import ReactQuill from "react-quill";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
 
 const Write = () => {
@@ -11,16 +11,17 @@ const Write = () => {
   const [file, setFile] = useState<File | null>(null);
   const [cat, setCat] = useState(state?.cat || "");
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const upload = async () => {
-    console.log("try to upload");
-  };
-  const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    const imgUrl = await upload();
-    navigate("/");
-  };
+  // const upload = async () => {
+  //   console.log("try to upload");
+  // };
+  // const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
+  //   e.preventDefault();
+  //   // const imgUrl = await upload();
+  //   navigate("/");
+  // };
+  console.log(file);
 
   return (
     <div className="add">
@@ -65,7 +66,7 @@ const Write = () => {
           </label>
           <div className="buttons">
             <button>Save as a draft</button>
-            <button onClick={handleClick}>Publish</button>
+            <button onClick={() => console.log("publish")}>Publish</button>
           </div>
         </div>
         <div className="item">
