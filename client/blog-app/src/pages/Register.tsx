@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 
 const schema = z.object({
   username: z
@@ -16,12 +17,22 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
-  const onSubmit = (data: FieldValues) => console.log(data);
+  const onSubmit = async (data: FieldValues) => {
+    axios.post("/api/user", data).then((res) => {
+      if (res.status === 200) {
+        sessionStorage.set("user", JSON.stringify(res.data));
+        sessionStorage.set("token", res.headers["x-auth-token"]);
+        navigate("/");
+      }
+    });
+  };
 
   return (
     <div className="auth">

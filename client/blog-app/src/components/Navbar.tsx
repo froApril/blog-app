@@ -1,14 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo.png";
-import { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import { useContext, useEffect, useState } from "react";
+
+interface User {
+  _id?: string;
+  username: string;
+  password: string;
+}
+
 const Navbar = () => {
-  const context = useContext(AuthContext);
-  const currentUser = context?.currentUser;
-  let username = "";
-  if (currentUser) username = JSON.stringify(currentUser);
-  username = username.slice(1, username.length - 1);
-  const logout = context?.logout;
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(sessionStorage.getItem("user")!));
+  }, [sessionStorage.getItem("user")]);
 
   return (
     <div className="navbar">
@@ -37,10 +43,17 @@ const Navbar = () => {
           <Link className="link" to="/?cat=food">
             <h6>FOOD</h6>
           </Link>
-          {currentUser ? (
+          {currentUser != null ? (
             <>
-              <span>{username}</span>
-              <span onClick={logout}>Logout</span>
+              <span>{currentUser.username}</span>
+              <span
+                onClick={() => {
+                  setCurrentUser(null);
+                  navigate("/");
+                }}
+              >
+                Logout
+              </span>
               <span className="write">
                 <Link className="link" to="/write">
                   Write

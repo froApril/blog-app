@@ -3,7 +3,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useContext } from "react";
-import { AuthContext } from "../context/authContext";
+import axios from "axios";
 
 const schema = z.object({
   username: z
@@ -24,16 +24,15 @@ const Login = () => {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-  const context = useContext(AuthContext);
   const navigate = useNavigate();
-  const onSubmit = (data: FieldValues) => {
+  const onSubmit = async (data: FieldValues) => {
     const input = {
       username: data.username,
       password: data.password,
     };
-    const currentUser = context?.currentUser;
-    console.log(currentUser);
-    context?.login(input);
+    const res = await axios.post("/api/auth", input);
+    sessionStorage.setItem("user", JSON.stringify(input));
+    sessionStorage.setItem("token", res.data);
     navigate("/");
   };
 

@@ -1,0 +1,6 @@
+{
+  "jwtPrivateKey": "blogPrivateKey",
+  "db": "mongodb://localhost/blog",
+  "port": "3900",
+  "requiresAuth": false
+}
