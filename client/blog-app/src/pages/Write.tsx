@@ -1,11 +1,12 @@
 import { useState } from "react";
 import ReactQuill from "react-quill";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "react-quill/dist/quill.snow.css";
+import moment from "moment";
+import axios from "axios";
 
 const Write = () => {
   const state = useLocation().state;
-  console.log(state);
   const [value, setValue] = useState(state?.desc || "");
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState<File | null>(null);
@@ -21,7 +22,45 @@ const Write = () => {
   //   // const imgUrl = await upload();
   //   navigate("/");
   // };
-  console.log(file);
+  const navigate = useNavigate();
+
+  const publish = async () => {
+    let img =
+      "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+    // let formData = new FormData();
+    // if (file != null) {
+    //   // img = (await toBase64(file)) as string;
+    //   formData.append("img", file);
+    // }
+    const post = {
+      title: title,
+      userImg: file ? URL.createObjectURL(file) : img,
+      img: file ? URL.createObjectURL(file) : img,
+      date: moment().format("YYYY-MM-DD"),
+      cat: cat,
+      desc: value,
+    };
+    console.log(post);
+    axios
+      .post("/api/post", post)
+      .then((res) => {
+        if (res.status === 200) {
+          alert("Create post success");
+          navigate("/");
+        } else {
+          console.log(res);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const toBase64 = (file: File) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
 
   return (
     <div className="add">
@@ -64,9 +103,10 @@ const Write = () => {
           <label className="file" htmlFor="file">
             Upload Image
           </label>
+          {file && <label className="file">{file.name}</label>}
           <div className="buttons">
             <button>Save as a draft</button>
-            <button onClick={() => console.log("publish")}>Publish</button>
+            <button onClick={publish}>Publish</button>
           </div>
         </div>
         <div className="item">

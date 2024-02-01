@@ -8,8 +8,8 @@ const _ = require("lodash");
 
 router.get('/', auth, async (req, res) => {
     const posts = await Post.find();
-    console.log(posts)
-    res.send(posts);
+    const selected = _.sampleSize(posts,5);
+    res.send(selected);
 })
 
 router.get('/:category', auth, async (req, res) => {
@@ -22,6 +22,7 @@ router.get('/:category', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
     console.log(req.body);
     const { error } = validate(req.body);
+    console.log(error)
     if (error) return res.status(400).send(error.details[0].message);
 
     const post = new Post(_.pick(req.body, ['title', 'desc', 'img', 'userImg', 'date', 'cat', 'username']))

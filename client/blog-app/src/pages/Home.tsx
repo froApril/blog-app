@@ -12,10 +12,15 @@ export interface Post {
 const Home = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const cat = useLocation().search.split("=")[1];
+  const [fileDataUrl, setFileDataUrl] = useState(null);
+
   useEffect(() => {
     let url = "/api/post/";
     if (cat) url += cat;
     axios.get(url).then((res) => {
+      // res.data.map((post: Post) => {
+      //   post.img = reader.readAsDataURL(post.img);
+      // });
       setPosts(res.data);
     });
   }, [cat]);
@@ -33,7 +38,7 @@ const Home = () => {
                 <Link className="link" to={`/post/${post._id}`}>
                   <h1>{post.title}</h1>
                 </Link>
-                <p>{post.desc}</p>
+                <div dangerouslySetInnerHTML={{ __html: post.desc }} />
                 <button>Read More</button>
               </div>
             </div>
