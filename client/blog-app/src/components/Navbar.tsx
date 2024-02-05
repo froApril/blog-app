@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/img/logo.png";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface User {
   _id?: string;
