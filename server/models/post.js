@@ -16,14 +16,10 @@ const Post = mongoose.model('Post', new mongoose.Schema({
         maxlength: 65533,
     },
     img: {
-        type: String,
-        minlength: 5,
-        maxlength: 255,
+        type: String
     },
     userImg: {
-        type: String,
-        minlength: 5,
-        maxlength: 255,
+        type: String
     },
     username: {
         type: String,
@@ -50,12 +46,8 @@ const validatePost = (post) => {
         desc: Joi.string()
                  .min(5)
                  .max(65533),
-        img: Joi.string()
-                .min(5)
-                .max(255),
-        userImg: Joi.string()
-                    .min(5)
-                    .max(255),
+        img: Joi.string(),
+        userImg: Joi.string(),
         username: Joi.string()
                      .min(5)
                      .max(255),

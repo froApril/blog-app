@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Edit from "../assets/img/edit.png";
 import Delete from "../assets/img/delete.png";
 import Menu from "../components/Menu";
+import axios from "axios";
+import moment from "moment";
 
-interface SinglePost {
-  id: number;
+export interface SinglePost {
+  _id: string;
   title: string;
   desc: string;
   img: string;
@@ -17,36 +19,38 @@ interface SinglePost {
 }
 
 const Single = () => {
-  const postData = {
-    id: 1,
-    title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-    desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
-    img: "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    userImg:
-      "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    username: "username",
-    date: "27/1/2024",
-    cat: "art",
-  };
-
   const [post, setPost] = useState<SinglePost | null>(null);
-  const location = useLocation();
+  const [currentUser, setCurrentUser] = useState<String | null>(null);
   const navigate = useNavigate();
+  const parms = useParams();
+  const targetId = parms.id!;
 
   useEffect(() => {
     // get post data with the given id
-    const postId = location.pathname.split("/")[2];
-    console.log("postId is: " + postId);
-    setPost(postData);
+    if (sessionStorage.getItem("user") != null) {
+      setCurrentUser(JSON.parse(sessionStorage.getItem("user")!).username);
+    }
+    axios.get("/api/post/all").then((res) => {
+      if (res.status === 200) {
+        setPost(
+          res.data.find((post: SinglePost) => {
+            return post._id === targetId;
+          })
+        );
+      }
+    });
   }, []);
 
-  const currentUser = {
-    username: "username",
-  };
-
   const handleDelete = () => {
-    console.log("Trying to delete this post");
-    navigate("/");
+    axios
+      .delete("/api/post/" + targetId)
+      .then((res) => {
+        if (res.status === 200) {
+          alert(res.data);
+          navigate("/");
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -59,9 +63,11 @@ const Single = () => {
               {post.userImg && <img src={post.userImg} alt="" />}
               <div className="info">
                 <span>{post.username}</span>
-                <p style={{ margin: 0 }}>Posted {post.date}</p>
+                <p style={{ margin: 0 }}>
+                  Posted {moment(post.date).subtract(10, "days").calendar()}
+                </p>
               </div>
-              {currentUser.username === post.username && (
+              {currentUser && currentUser === post.username && (
                 <div className="edit">
                   <Link to={"/write"} state={post}>
                     <img src={Edit} alt="" />
@@ -79,7 +85,7 @@ const Single = () => {
           </>
         )}
       </div>
-      {post != null && <Menu cat={post.cat} />}
+      {post != null && <Menu cat={post.cat} parentId={targetId} />}
     </div>
   );
 };

@@ -9,56 +9,59 @@ const Write = () => {
   const state = useLocation().state;
   const [value, setValue] = useState(state?.desc || "");
   const [title, setTitle] = useState(state?.title || "");
+  const [postId, setPostId] = useState(state?._id || "");
   const [file, setFile] = useState<File | null>(null);
   const [cat, setCat] = useState(state?.cat || "");
-
-  // const navigate = useNavigate();
-
-  // const upload = async () => {
-  //   console.log("try to upload");
-  // };
-  // const handleClick = async (e: MouseEvent<HTMLButtonElement>) => {
-  //   e.preventDefault();
-  //   // const imgUrl = await upload();
-  //   navigate("/");
-  // };
   const navigate = useNavigate();
 
   const publish = async () => {
     let img =
       "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
-    // let formData = new FormData();
-    // if (file != null) {
-    //   // img = (await toBase64(file)) as string;
-    //   formData.append("img", file);
-    // }
+    if (file) {
+      img = (await toBase64(file)) as string;
+    }
     const post = {
       title: title,
-      userImg: file ? URL.createObjectURL(file) : img,
-      img: file ? URL.createObjectURL(file) : img,
+      userImg: img,
+      img: img,
       date: moment().format("YYYY-MM-DD"),
       cat: cat,
       desc: value,
+      username: JSON.parse(sessionStorage.getItem("user")!).username, // make current username as a context
     };
-    console.log(post);
-    axios
-      .post("/api/post", post)
-      .then((res) => {
-        if (res.status === 200) {
-          alert("Create post success");
-          navigate("/");
-        } else {
-          console.log(res);
-        }
-      })
-      .catch((err) => console.log(err));
+    // make the axios part to be hooks
+    if (postId != "") {
+      axios
+        .put("/api/post/" + postId, post)
+        .then((res) => {
+          if (res.status === 200) {
+            alert(res.data);
+            navigate("/");
+          } else {
+            alert(res.data);
+          }
+        })
+        .catch((err) => alert(err.response.data));
+    } else {
+      axios
+        .post("/api/post", post)
+        .then((res) => {
+          if (res.status === 200) {
+            alert("Create post success");
+            navigate("/");
+          } else {
+            alert(res.data);
+          }
+        })
+        .catch((err) => alert(err.response.data));
+    }
   };
 
   const toBase64 = (file: File) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(resolve(reader.result));
       reader.onerror = (error) => reject(error);
     });
 

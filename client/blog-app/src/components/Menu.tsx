@@ -1,42 +1,22 @@
 import { useEffect, useState } from "react";
 import { Post } from "../pages/Home";
+import axios from "axios";
+import { SinglePost } from "../pages/Single";
 
 interface Props {
   cat: string;
+  parentId: string;
 }
 
-const Menu = ({ cat }: Props) => {
-  console.log(cat);
-  const postData = [
-    {
-      _id: "1",
-      title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
-      img: "https://images.pexels.com/photos/7008010/pexels-photo-7008010.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    },
-    {
-      _id: "2",
-      title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
-      img: "https://images.pexels.com/photos/6489663/pexels-photo-6489663.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    },
-    {
-      _id: "3",
-      title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
-      img: "https://images.pexels.com/photos/4230630/pexels-photo-4230630.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    },
-    {
-      _id: "4",
-      title: "Lorem ipsum dolor sit amet consectetur adipisicing elit",
-      desc: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. A possimus excepturi aliquid nihil cumque ipsam facere aperiam at! Ea dolorem ratione sit debitis deserunt repellendus numquam ab vel perspiciatis corporis!",
-      img: "https://images.pexels.com/photos/6157049/pexels-photo-6157049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    },
-  ];
+const Menu = ({ cat, parentId }: Props) => {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    setPosts(postData);
+    let url = "/api/post/";
+    url += cat;
+    axios.get(url).then((res) => {
+      setPosts(res.data.filter((post: SinglePost) => post._id != parentId));
+    });
   }, []);
 
   return (
